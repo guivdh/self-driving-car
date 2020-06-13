@@ -4,6 +4,16 @@ import cv2
 import time
 import pyautogui
 
+
+def draw_lines(img, lines):
+    try:
+        for line in lines:
+            coords = line[0]
+            cv2.line(img, (coords[0], coords[1]), (coords[2], coords[3]), [255, 255, 255], 3)
+    except:
+        pass
+
+
 def roi(img, vertices):
     mask = np.zeros_like(img)
     cv2.fillPoly(mask, vertices, 255)
@@ -14,8 +24,14 @@ def roi(img, vertices):
 def process_img(original_image):
     processed_img = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
     processed_img = cv2.Canny(processed_img, threshold1=200, threshold2=300)
+    #processed_img = cv2.fastNlMeansDenoising(processed_img, None, 10, 10, 7)
+    processed_img = cv2.GaussianBlur(processed_img, (5, 5), 0)
     vertices = np.array([[0, 500], [0, 400], [380, 200], [580, 200], [960, 400], [960, 500]])
     processed_img = roi(processed_img, [vertices])
+
+    lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 180, 20, 15)
+    draw_lines(processed_img, lines)
+
     return processed_img
 
 
@@ -23,7 +39,7 @@ def process_img(original_image):
 def main():
     last_time = time.time()
     while(True):
-        screen = np.array(ImageGrab.grab(bbox=(0,275,960,805)))
+        screen = np.array(ImageGrab.grab(bbox=(0, 275, 960, 805)))
         new_screen = process_img(screen)
 
         print('Loop took {} seconds'.format(time.time()-last_time))

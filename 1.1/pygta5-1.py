@@ -3,10 +3,10 @@ from PIL import ImageGrab
 import cv2
 import time
 import pyautogui
+from playsound import playsound
 
 
 def draw_lines(img, lines):
-
     line_left = [0, 0, 0, 0]
     line_right = [0, 0, 0, 0]
     nbre_line_left = 0
@@ -36,8 +36,8 @@ def draw_lines(img, lines):
             line_left[i] = int(line_left[i])
             line_right[i] = int(line_right[i])
 
-        print(line_left)
-        print(line_right)
+        #print(line_left)
+        #print(line_right)
         cv2.line(img, (line_left[0], line_left[1]), (line_left[2], line_left[3]), [255, 255, 255], 3)
         cv2.line(img, (line_right[0], line_right[1]), (line_right[2], line_right[3]), [255, 255, 255], 3)
 
@@ -56,11 +56,15 @@ def draw_lines(img, lines):
         cv2.circle(img, (x_right, 300), 5, (0, 0, 255), -1)
         distance_line_left = 480 - x_left
         distance_line_right = abs(480-x_right)
-        print("Distance ligne Gauche : " + str(distance_line_left))
-        print("Distance ligne Droite : " + str(distance_line_right))
+        print(str(distance_line_left) + " | " + str(distance_line_right))
+
+        #if distance_line_left < 100:
+        #    right()
+        #if distance_line_left > 150:
+        #    left()
 
     except:
-        print("Error")
+        #stop()
         pass
 
 
@@ -96,32 +100,35 @@ def straight():
 
 def left():
     pyautogui.keyDown('q')
-    pyautogui.keyUp('z')
+    #pyautogui.keyUp('z')
     pyautogui.keyUp('s')
     pyautogui.keyUp('d')
+    pyautogui.keyUp('q')
 
 def right():
     pyautogui.keyDown('d')
-    pyautogui.keyUp('z')
+    #pyautogui.keyUp('z')
     pyautogui.keyUp('s')
     pyautogui.keyUp('q')
+    pyautogui.keyUp('d')
 
 def stop():
     pyautogui.keyDown('s')
     pyautogui.keyUp('z')
     pyautogui.keyUp('q')
     pyautogui.keyUp('d')
+    pyautogui.keyUp('s')
 
 def main():
     last_time = time.time()
-
+    #straight()
     while(True):
         screen = np.array(ImageGrab.grab(bbox=(0, 275, 960, 805)))
         new_screen = process_img(screen)
 
         cv2.circle(screen, (480,300), 5, (255,255,255), -1)
 
-        print('Loop took {} seconds'.format(time.time()-last_time))
+        #print('Loop took {} seconds'.format(time.time()-last_time))
         last_time = time.time()
         cv2.imshow('window', cv2.cvtColor(screen, cv2.COLOR_BGR2RGB))
 
@@ -130,7 +137,7 @@ def main():
             break
 
 
-#for i in range(4):
-#    time.sleep(1)
-#    print(i)
+for i in range(4):
+    time.sleep(1)
+    print(i)
 main()

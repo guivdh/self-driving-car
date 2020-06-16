@@ -6,11 +6,15 @@ import pyautogui
 
 
 def draw_lines(img, lines):
+
+    line_left = [0, 0, 0, 0]
+    line_right = [0, 0, 0, 0]
+    nbre_line_left = 0
+    nbre_line_right = 0
     try:
-        line_left = [0, 0, 0, 0]
-        line_right = [0, 0, 0, 0]
-        nbre_line_left = 0
-        nbre_line_right = 0
+        for line in lines:
+            coords = line[0]
+            cv2.line(img, (coords[0], coords[1]), (coords[2], coords[3]), [255, 0, 0], 3)
 
         for line in lines:
             coords = line[0]
@@ -36,7 +40,27 @@ def draw_lines(img, lines):
         print(line_right)
         cv2.line(img, (line_left[0], line_left[1]), (line_left[2], line_left[3]), [255, 255, 255], 3)
         cv2.line(img, (line_right[0], line_right[1]), (line_right[2], line_right[3]), [255, 255, 255], 3)
+
+        a_left = (line_left[3] - line_left[1]) / (line_left[2] - line_left[0])
+        b_left = line_left[1] - (a_left * line_left[0])
+
+        x_left = (300-b_left) / a_left
+        x_left = int(x_left)
+        cv2.circle(img, (x_left, 300), 5, (0, 0, 255), -1)
+        
+        a_right = (line_right[3] - line_right[1]) / (line_right[2] - line_right[0])
+        b_right = line_right[1] - (a_right * line_right[0])
+
+        x_right = (300-b_right) / a_right
+        x_right = int(x_right)
+        cv2.circle(img, (x_right, 300), 5, (0, 0, 255), -1)
+        distance_line_left = 480 - x_left
+        distance_line_right = abs(480-x_right)
+        print("Distance ligne Gauche : " + str(distance_line_left))
+        print("Distance ligne Droite : " + str(distance_line_right))
+
     except:
+        print("Error")
         pass
 
 
@@ -64,9 +88,33 @@ def process_img(original_image):
     return processed_img
 
 
+def straight():
+    pyautogui.keyDown('z')
+    pyautogui.keyUp('q')
+    pyautogui.keyUp('s')
+    pyautogui.keyUp('d')
+
+def left():
+    pyautogui.keyDown('q')
+    pyautogui.keyUp('z')
+    pyautogui.keyUp('s')
+    pyautogui.keyUp('d')
+
+def right():
+    pyautogui.keyDown('d')
+    pyautogui.keyUp('z')
+    pyautogui.keyUp('s')
+    pyautogui.keyUp('q')
+
+def stop():
+    pyautogui.keyDown('s')
+    pyautogui.keyUp('z')
+    pyautogui.keyUp('q')
+    pyautogui.keyUp('d')
 
 def main():
     last_time = time.time()
+
     while(True):
         screen = np.array(ImageGrab.grab(bbox=(0, 275, 960, 805)))
         new_screen = process_img(screen)
@@ -82,7 +130,7 @@ def main():
             break
 
 
-for i in range(4):
-    time.sleep(1)
-    print(i)
+#for i in range(4):
+#    time.sleep(1)
+#    print(i)
 main()

@@ -15,18 +15,20 @@ def draw_lines(img, lines):
         for line in lines:
             coords = line[0]
             pente = (coords[3] - coords[1]) / (coords[2] - coords[0])
+            #print(pente)
 
             # Si la pente de la ligne n'est pas comprise dans les normes, elle n'est pas prise en compte
-            if (0.6 < pente < 0.7) or (-1.1 < pente < -0.9):
+            if (0.6 < pente < 0.7) or (-0.8 < pente < -0.5):
                 cv2.line(img, (coords[0], coords[1]), (coords[2], coords[3]), [255, 0, 0], 3)
 
         # Dessine la ligne à partir de la moyennes des lignes détectées
         for line in lines:
             coords = line[0]
             penteMoyenne = (coords[3] - coords[1]) / (coords[2] - coords[0])
+            #print(penteMoyenne)
 
             # Si la pente de la ligne n'est pas comprise dans les normes, elle n'est pas prise en compte
-            if (0.6 < penteMoyenne < 0.7) or (-1.1 < penteMoyenne < -0.9):
+            if (0.6 < penteMoyenne < 0.7) or (-0.8 < penteMoyenne < -0.6):
 
                 # Ligne gauche
                 if coords[0] < coords[1]:
@@ -85,7 +87,7 @@ def draw_lines(img, lines):
         # Calcul de distance entre la ligne gauche, le centre de la voiture et la ligne droite
         distance_line_left = 480 - x_left
         distance_line_right = abs(480 - x_right)
-        # print(str(distance_line_left) + " | " + str(distance_line_right))
+        print(str(distance_line_left) + " | " + str(distance_line_right))
 
         # if distance_line_left < 100:
         #    right()
